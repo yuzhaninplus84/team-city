@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}Study Plan Management{% endblock %}
+{% block content %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+{% endblock %}
+<h2>Study Plan Dashboard</h2>
+<div class="container mt-3">
+  <h2>Study Plan List</h2>
+  <p>Below is the list of all available plan.</p>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID Plan</th>
+          <th>ID Course</th>
+          <th>Discipline</th>
+          <th>Semester</th>
+          <th>Credit of Discipline</th>
+          <th>Exam Format</th>
+        </tr>
+      </thead>
+      <tbody id="studyplanTableBody">
+        {% for study_plan in study_plans %}
+        <tr>
+          <td>{{ study_plan.id_plan }}</td>
+          <td>{{ study_plan.id_course }}</td>
+          <td>{{ study_plan.discipline }}</td>
+          <td>{{ study_plan.semester }}</td>
+          <td>{{ study_plan.credit_of_discipline }}</td>
+          <td>{{ study_plan.exam_format }}</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                data-bs-target="#view_studyplan" data-idplan="{{ study_plan.id_plan }}">View</button>
+              <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                data-bs-target="#update_studyplan" data-idplan="{{ study_plan.id_plan }}">Update</button>
+              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                data-bs-target="#delete_studyplan" data-idplan="{{ study_plan.id_plan }}">Delete</button>
+
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="m-4">
+    <div class="container mt-3">
+      <h3>Add new study plan</h3>
+      <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal"
+        data-bs-target="#add_studyplan">
+        Add study plan
+      </button>
+
+    </div>
+
+
+    <div class="modal" id="add_studyplan">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h4 class="modal-title">Add new study plan</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+
+          <div class="modal-body">
+            <form id="addStudyPlanForm" method="POST">
+
+              <div class="mb-3">
+                <label for="id_plan" class="form-label">ID Plan</label>
+                <input type="text" class="form-control" id="id_plan" name="id_plan" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="id_course" class="form-label">ID Course</label>
+                <input type="text" class="form-control" id="id_course" name="id_course" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="discipline" class="form-label">Discipline</label>
+                <input type="text" class="form-control" id="discipline" name="discipline" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="semester" class="form-label">Semester</label>
+                <input type="number" class="form-control" id="semester" name="semester" required>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="credit_of_discipline" class="form-label">Credit hours</label>
+                <input type="number" class="form-control" id="credit_of_discipline" name="credit_of_discipline"
+                  required>
+              </div>
+
+              <div class="mb-3">
+                <label for="exam_format" class="form-label">Exam Format</label>
+                <select class="form-select" id="exam_format" name="exam_format">
+                  <option value="">Select exam format</option>
+                  <option value="Exam">Exam</option>
+                  <option value="Pass-Fail">Pass-Fail</option>
+                </select>
+              </div>
+
+            </form>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal View-->
+<div class="modal" id="view_studyplan">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">View Student</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal Delete-->
+<div class="modal" id="delete_studyplan">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Study Plan</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Do you want to delete this plan information?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="confirmDeleteButton">Delete</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- id_plan= db.Column(db.String(50), primary_key=True)
+    id_course = db.Column(db.String(100), nullable=False)
+    discipline = db.Column(db.String(100), nullable=False)
+    semester = db.Column(db.Integer, nullable=False)
+    credit_of_discipline = db.Column(db.Integer, nullable=False)
+    exam_format = db.Column(db.String(20), nullable=False) -->
+
+<!-- The Modal Update-->
+<div class="modal" id="update_studyplan">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Update study plan</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form id="updateStudyplanForm">
+          <input type="hidden" id="update_id_plan" name="id_plan">
+
+          <div class="mb-3">
+            <label for="update_id_course" class="form-label">ID Course</label>
+            <input type="text" class="form-control" id="update_id_course" name="id_course" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="update_discipline" class="form-label">Discipline</label>
+            <input type="text" class="form-control" id="update_discipline" name="discipline" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="update_semester" class="form-label">Semester</label>
+            <input type="text" class="form-control" id="update_semester" name="semester">
+          </div>
+
+          <div class="mb-3">
+            <label for="update_credit_of_discipline" class="form-label">Credit of Discipline</label>
+            <input type="text" class="form-control" id="update_credit_of_discipline" name="credit_of_discipline">
+          </div>
+          <div class="mb-3">
+            <label for="update_exam_format" class="form-label">Exam Format</label>
+            <select class="form-select" id="update_exam_format" name="exam_format">
+              <option value="">Select exam format</option>
+              <option value="Exam">Exam</option>
+              <option value="Pass-Fail">Pass-Fail</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="confirmUpdateButton">Update</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/studyplan/addstudyplan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/studyplan/view_studyplan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/studyplan/delete_studyplan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/studyplan/update_studyplan.js') }}"></script>
+{% endblock %}

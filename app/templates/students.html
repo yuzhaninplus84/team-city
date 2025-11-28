@@ -1,0 +1,287 @@
+{% extends "base.html" %} 
+{% block title %}Student Infomation Management{% endblock %} 
+{% block content %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+{% endblock %}
+<h2>Student Dashboard</h2>
+<div class="container mt-3">
+    <h2>Student List</h2>
+    <p>Below is the list of all available student.</p>
+ <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>ID Student</th>
+                <th>Last Name</th>
+                <th>Full Name</th>
+                <th>Year of Admission</th>
+                <th>Form of Study</th>
+                <th>Education Level</th>
+                <th>Course Code</th>
+                <th>Group Number</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="studentsTableBody">
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id_student }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.year_of_admission }}</td>
+                <td>{{ student.form_of_study }}</td>
+                <td>{{ student.education_level }}</td>
+                <td>{{ student.course_code }}</td>
+                <td>{{ student.group_number }}</td>
+                <td>{{ student.number_phone }}</td>
+                <td>{{ student.email }}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#view_student" data-idstudent="{{ student.id_student }}">View</button>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#update_student" data-idstudent="{{ student.id_student }}">Update</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_student" data-idstudent="{{ student.id_student }}">Delete</button>
+                        
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+    <div class="m-4">
+        <div class="container mt-3">
+            <h3>Add new students</h3>
+            <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal"
+                data-bs-target="#add_student">
+                Add Student
+            </button>
+
+        </div>
+
+        <!-- The Modal -->
+        <div class="modal" id="add_student">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add new info of student</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="addStudentForm" method="POST">
+
+                            <div class="mb-3">
+                                <label for="id_student" class="form-label">ID Student</label>
+                                <input type="text" class="form-control" id="id_student" name="id_student" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="year_of_admission" class="form-label">Year of Admission</label>
+                                <input type="number" class="form-control" id="year_of_admission"
+                                    name="year_of_admission" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="form_of_study" class="form-label">Form of Study</label>
+                                <select class="form-select" id="form_of_study" name="form_of_study">
+                                    <option value="">Select form of study</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Evening">Evening</option>
+                                    <option value="Correspondence">Correspondence</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="education_level" class="form-label">Education Level</label>
+                                <select class="form-select" id="education_level" name="education_level">
+                                    <option value="">Select education level</option>
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Master">Master</option>
+                                    <option value="PhD">PhD</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="course_code" class="form-label">Course Code</label>
+                                <input type="text" class="form-control" id="course_code" name="course_code" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="group_number" class="form-label">Group Number</label>
+                                <input type="text" class="form-control" id="group_number" name="group_number">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="number_phone" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="number_phone" name="number_phone">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- The Modal View-->
+<div class="modal" id="view_student">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">View Student</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal Delete-->
+<div class="modal" id="delete_student">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Student</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Do you want to delete this student information?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="confirmDeleteButton">Delete</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal Update-->
+<div class="modal" id="update_student">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Update Student</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       <form id="updateStudentForm">
+            <input type="hidden" id="update_id_student" name="id_student">
+
+            <div class="mb-3">
+              <label for="update_last_name" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="update_last_name" name="last_name" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="update_full_name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="update_full_name" name="full_name" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="update_year_of_admission" class="form-label">Year of Admission</label>
+              <input type="number" class="form-control" id="update_year_of_admission" name="year_of_admission" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="update_form_of_study" class="form-label">Form of Study</label>
+              <input type="text" class="form-control" id="update_form_of_study" name="form_of_study">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_education_level" class="form-label">Education Level</label>
+              <input type="text" class="form-control" id="update_education_level" name="education_level">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_course_code" class="form-label">Course Code</label>
+              <input type="text" class="form-control" id="update_course_code" name="course_code">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_group_number" class="form-label">Group Number</label>
+              <input type="text" class="form-control" id="update_group_number" name="group_number">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_number_phone" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="update_number_phone" name="number_phone">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="update_email" name="email">
+            </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="confirmUpdateButton">Update</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/student/send_new_student.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student/view_student.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student/delete_student.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student/update_student.js') }}"></script>
+{% endblock %}

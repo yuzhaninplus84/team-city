@@ -1,0 +1,217 @@
+{% extends "base.html" %} 
+{% block title %}Course Management{% endblock %} 
+{% block content %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+{% endblock %}
+<h2>Course Dashboard</h2>
+
+<div class="container mt-3">
+    <h2>Course List</h2>
+    <p>Below is the list of all available courses.</p>
+ <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Id course</th>
+                <th>Name course</th>
+                <th>Credit hours</th>
+                <th>Number of years of study</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="coursesTableBody">
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.id_course }}</td>
+                <td>{{ course.name_course }}</td>
+                <td>{{ course.total_hours }}</td>
+                <td>{{ course.number_year }}</td>
+                <td>{{ course.description }}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#view_course" data-idcourse="{{ course.id_course }}">View</button>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#update_course" data-idcourse="{{ course.id_course }}">Update</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_course" data-idcourse="{{ course.id_course }}">Delete</button>
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+    <div class="m-4">
+        <div class="container mt-3">
+            <h3>Add new course</h3>
+            <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal"
+                data-bs-target="#add_course">
+                Add course
+            </button>
+
+        </div>
+
+       
+        <div class="modal" id="add_course">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add new course</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    
+                    <div class="modal-body">
+                        <form id="addCourseForm" method="POST">
+
+                            <div class="mb-3">
+                                <label for="id_course" class="form-label">ID Course</label>
+                                <input type="text" class="form-control" id="id_course" name="id_course" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="name_course" class="form-label">Name Course</label>
+                                <input type="text" class="form-control" id="name_course" name="name_course" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="total_hours" class="form-label">Credit hours</label>
+                                <input type="number" class="form-control" id="total_hours" name="total_hours" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="number_year" class="form-label">Number of Years</label>
+                                <input type="text" class="form-control" id="number_year" name="number_year" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+
+                        </form>
+                    </div>
+
+                   
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal View-->
+<div class="modal" id="view_course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">View Course</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal Delete-->
+<div class="modal" id="delete_course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Course</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Do you want to delete this course information?
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="confirmDeleteButton">Delete</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- The Modal Update-->
+<div class="modal" id="update_course">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Update Course</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       <form id="updateCourseForm">
+            <input type="hidden" id="update_id_course" name="id_course">
+
+            <div class="mb-3">
+              <label for="update_name_course" class="form-label">Course Name</label>
+              <input type="text" class="form-control" id="update_name_course" name="name_course" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="update_total_hours" class="form-label">Credit hours</label>
+              <input type="number" class="form-control" id="update_total_hours" name="total_hours" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="update_number_year" class="form-label">Number of years of study</label>
+              <input type="text" class="form-control" id="update_number_year" name="number_year">
+            </div>
+
+            <div class="mb-3">
+              <label for="update_description" class="form-label">Description</label>
+              <input type="text" class="form-control" id="update_description" name="description">
+            </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="confirmUpdateButton">Update</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/course/addcourse.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/course/view_course.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/course/delete_course.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/course/update_course.js') }}"></script>
+{% endblock %}
