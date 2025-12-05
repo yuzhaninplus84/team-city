@@ -60,7 +60,7 @@ def add_student():
         return jsonify({'success': True,
                         'student': {
                             'id_student': new_student.id_student,
-                            'last_name': new_student.last_name,
+                            #'last_name': new_student.last_name,
                             'full_name': new_student.full_name,
                             'year_of_admission': new_student.year_of_admission,
                             'form_of_study': new_student.form_of_study,
