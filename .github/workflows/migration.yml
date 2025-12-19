@@ -1,7 +1,7 @@
 name: Database Migration
 on:
   push:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   migrate-db:
