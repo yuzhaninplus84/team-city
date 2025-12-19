@@ -1,0 +1,22 @@
+name: Deploy to Stage
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  deploy-stage:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Deploy to Stage Server
+        run: |
+          echo "Deploying application to stage environment"
+          # Здесь команды для деплоя на Windows сервер
+          # Например: копирование файлов, перезапуск служб
+          
+      - name: Verify Deployment
+        run: |
+          echo "Verifying stage deployment"
+          # Скрипт проверки работоспособности
