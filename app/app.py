@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-from models import db, Student, Course, StudyPlan, StudentProgressLog
+from models import db, Student, Course, StudyPlan, StudentProgressLog, StudentAttendance
+from datetime import datetime
 
 
 
@@ -370,6 +371,34 @@ def get_study_plans(course_id):
         return jsonify({'success': True, 'plans': data})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+    
+# Lab 8.5
+# Добавляем новые API endpoints в app.py
+@app.route('/add_attendance', methods=['POST'])
+def add_attendance():
+    try:
+        data = request.get_json()
+        new_attendance = StudentAttendance(
+            student_id=data.get('student_id'),
+            course_id=data.get('course_id'),
+            attendance_date=datetime.strptime(data.get('attendance_date'), '%Y-%m-%d').date(),
+            status=data.get('status')
+        )
+        db.session.add(new_attendance)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Attendance recorded'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/attendance/<int:student_id>', methods=['GET'])
+def get_attendance(student_id):
+    attendances = StudentAttendance.query.filter_by(student_id=student_id).all()
+    return jsonify([{
+        'id': a.id,
+        'course_id': a.course_id,
+        'attendance_date': a.attendance_date.isoformat(),
+        'status': a.status
+    } for a in attendances])
 
 # @app.route("/about")
 # def about():

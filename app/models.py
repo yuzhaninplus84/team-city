@@ -35,3 +35,17 @@ class StudentProgressLog(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.id_student'))
     course_id = db.Column(db.String(50), db.ForeignKey('course.id_course'))
     grade = db.Column(db.String(20))
+
+# Lab 8.4
+from datetime import datetime
+
+class StudentAttendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id_student'))
+    course_id = db.Column(db.String(50), db.ForeignKey('course.id_course'))
+    attendance_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<Attendance {self.student_id} {self.attendance_date}>'
