@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS student_achievements (
     achievement_date DATE NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES student(id_student)
+    FOREIGN KEY (student_id) REFERENCES student (id_student)
 );
 
 -- Индекс для поиска достижений по студенту
-CREATE INDEX IF NOT EXISTS idx_achievements_student 
-ON student_achievements(student_id);
+CREATE INDEX IF NOT EXISTS idx_achievements_student
+ON student_achievements (student_id);
 
 -- Индекс по типу достижения
-CREATE INDEX IF NOT EXISTS idx_achievements_type 
-ON student_achievements(achievement_type);
+CREATE INDEX IF NOT EXISTS idx_achievements_type
+ON student_achievements (achievement_type);
