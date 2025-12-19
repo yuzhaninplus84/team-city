@@ -26,10 +26,10 @@ def compare_schemas():
     stage_schema = get_schema('stage_student_portal.db')  # STAGE БД
     
     if test_schema == stage_schema:
-        print("✅ TEST and STAGE schemas are identical")
+        print("TEST and STAGE schemas are identical")
         return True
     else:
-        print("❌ Schemas differ!")
+        print("Schemas differ!")
         
         # Находим различия
         test_tables = set(test_schema.keys())
