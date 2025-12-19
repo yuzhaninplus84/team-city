@@ -1,0 +1,33 @@
+name: Database Migration
+on:
+  push:
+    branches: [main]
+
+jobs:
+  migrate-db:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          # pip install alembic
+          
+      - name: Compare TEST and STAGE schemas
+        run: |
+          python scripts/compare_schemas.py
+          
+      - name: Generate and run migration
+        run: |
+          echo "Generate and run migration"
+          # alembic revision --autogenerate -m "auto migration"
+          # alembic upgrade head
+        # env:
+          # DATABASE_URL: ${{ secrets.STAGE_DATABASE_URL }}
