@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from models import db, Student, Course, StudyPlan, StudentProgressLog, StudentAttendance
+from models import db, Student, Course, StudyPlan, StudentProgressLog, StudentAttendance, StudentAchievement
 from datetime import datetime
 
 
@@ -399,6 +399,35 @@ def get_attendance(student_id):
         'attendance_date': a.attendance_date.isoformat(),
         'status': a.status
     } for a in attendances])
+
+# Lab 8.11
+@app.route('/add_achievement', methods=['POST'])
+def add_achievement():
+    try:
+        data = request.get_json()
+        new_achievement = StudentAchievement(
+            student_id=data.get('student_id'),
+            achievement_type=data.get('achievement_type'),
+            achievement_name=data.get('achievement_name'),
+            achievement_date=datetime.strptime(data.get('achievement_date'), '%Y-%m-%d').date(),
+            description=data.get('description')
+        )
+        db.session.add(new_achievement)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Achievement added'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/achievements/<int:student_id>', methods=['GET'])
+def get_achievements(student_id):
+    achievements = StudentAchievement.query.filter_by(student_id=student_id).all()
+    return jsonify([{
+        'id': a.id,
+        'achievement_type': a.achievement_type,
+        'achievement_name': a.achievement_name,
+        'achievement_date': a.achievement_date.isoformat(),
+        'description': a.description
+    } for a in achievements])
 
 # @app.route("/about")
 # def about():

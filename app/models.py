@@ -49,3 +49,16 @@ class StudentAttendance(db.Model):
     
     def __repr__(self):
         return f'<Attendance {self.student_id} {self.attendance_date}>'
+    
+# Lab 8.11
+class StudentAchievement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id_student'))
+    achievement_type = db.Column(db.String(50), nullable=False)
+    achievement_name = db.Column(db.String(200), nullable=False)
+    achievement_date = db.Column(db.Date, nullable=False)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<Achievement {self.achievement_name}>'
