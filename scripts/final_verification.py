@@ -1,3 +1,4 @@
+import request
 import sqlite3
 import os
 from datetime import datetime
@@ -53,7 +54,7 @@ def final_verification():
     
     # Шаг 4: Проверка API endpoints (если приложение запущено)
     try:
-        response = requests.get('http://localhost:5000/achievements/1', timeout=5)
+        response = requests.get('http://127.0.0.1:5000/achievements/1', timeout=5)
         if response.status_code == 200:
             verification_steps.append(("Achievements API is working", True))
         else:
