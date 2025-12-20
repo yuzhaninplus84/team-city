@@ -1,22 +1,54 @@
-name: Deploy to Stage
+name: Production Deployment
 on:
   push:
-    branches: [dev]
+    branches: [main]
 
 jobs:
-  deploy-stage:
+  production-deployment:
     runs-on: windows-latest
+    environment: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Deploy to Stage Server
-        run: |
-          echo "Deploying application to stage environment"
-          # Здесь команды для деплоя на Windows сервер
-          # Например: копирование файлов, перезапуск служб
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
           
-      - name: Verify Deployment
+      - name: Install dependencies
         run: |
-          echo "Verifying stage deployment"
-          # Скрипт проверки работоспособности
+          pip install -r requirements.txt
+          # pip install alembic
+          
+      - name: Verify STAGE and PROD schemas
+        run: |
+          python scripts/verify_prod_schemas.py
+        # env:
+        #   STAGE_DB_PATH: ${{ secrets.STAGE_DB_PATH }}
+        #   PROD_DB_PATH: ${{ secrets.PROD_DB_PATH }}
+          
+      - name: Backup production database
+        run: |
+          echo "Creating backup of production database..."
+          python scripts/backup_database.py --env production --db-path "prod_student_portal.db" --keep 5
+        # env:
+        #   PROD_DB_PATH: ${{ secrets.PROD_DB_PATH }}
+          
+      - name: Apply migrations to PROD
+        run: |
+          echo "Applying database migrations..."
+        #   alembic upgrade head
+        # env:
+        #   DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          
+      - name: Deploy application to PROD
+        run: |
+          echo "Deploying application to production..."
+          # Команды для деплоя приложения
+          # ./deploy_prod.ps1
+          
+      - name: Health check and verification
+        run: |
+          echo "Checking health..."
+          python scripts/final_verification.py
