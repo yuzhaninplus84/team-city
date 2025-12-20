@@ -1,0 +1,15 @@
+{
+  "environment": "production",
+  "backup_time": "20251220_030733",
+  "original_database": "D:\\HK5\\TDHqtrinh\\teamcity\\prod_student_portal.db",
+  "database_size": 40960,
+  "backup_size": 40960,
+  "tables": {
+    "student": 4,
+    "course": 3,
+    "study_plan": 4,
+    "student_progress_log": 2,
+    "student_attendance": 1,
+    "student_achievement": 0
+  }
+}
